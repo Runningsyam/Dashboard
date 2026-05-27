@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Vehicle Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen Dashboard Wrapper -->
+  <div class="dashboard fade-in" id="dashboard">
+    
+    <!-- TOP STATUS BAR -->
+    <header class="top-bar">
+      <!-- Left side icons -->
+      <div class="topbar-left">
+        <span class="topbar-clock" id="topbar-clock">16:53</span>
+        
+        <!-- Volume/Speaker SVG -->
+        <svg class="topbar-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        
+        <!-- 4G & Signal Bars SVG -->
+        <div class="topbar-signal-group">
+          <span class="topbar-signal-label">4G</span>
+          <svg class="topbar-icon signal-bars" width="16" height="16" viewBox="0 0 24 24">
+            <rect x="3" y="17" width="2.5" height="3" rx="0.5" fill="currentColor"/>
+            <rect x="8" y="13" width="2.5" height="7" rx="0.5" fill="currentColor"/>
+            <rect x="13" y="9" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="18" y="5" width="2.5" height="15" rx="0.5" fill="currentColor"/>
+          </svg>
+        </div>
+        
+        <!-- Bluetooth SVG -->
+        <svg class="topbar-icon bluetooth-icon-btn active" id="topbar-bluetooth-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" onclick="toggleBluetoothModal()" style="cursor: pointer;">
+          <path d="M7 7l10 10-5 5V2l5 5L7 17"></path>
+        </svg>
+        
+        <!-- WiFi SVG (Clickable) -->
+        <svg class="topbar-icon wifi-icon-btn active" id="topbar-wifi-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" onclick="toggleWifiModal()">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"></path>
+        </svg>
+      </div>
+      
+      <!-- Center music player display -->
+      <div class="topbar-center" id="topbar-media-center">
+        <div class="topbar-music-player">
+          <div class="topbar-music-info-group">
+            <span class="topbar-music-icon">🎵</span>
+            <span class="topbar-music-info" id="topbar-music-info">All i ask • Adele Album 21</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right side controls -->
+      <div class="topbar-right">
+        <!-- Notifications Button -->
+        <button class="topbar-notification-btn" onclick="toggleNotificationPanel(event)" id="topbar-notification-btn">
+          <div class="bell-container">
+            <svg class="bell-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-badge" id="notification-badge"></span>
+          </div>
+          <span>Notifications</span>
+        </button>
+        
+        <!-- Microphone SVG -->
+        <svg class="topbar-icon cursor-pointer" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 21v3M8 24h8"></path>
+        </svg>
+        
+        <!-- Charging Port Status Button -->
+        <svg class="topbar-icon charging-port-btn closed" id="topbar-charging-port" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" onclick="toggleChargingPortState()" style="cursor: pointer;" title="Charging Port Status">
+          <!-- Port Outer Ring -->
+          <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"></circle>
+          <!-- Inner Socket Pins -->
+          <circle cx="9" cy="9" r="1.5" class="port-pins" fill="currentColor"></circle>
+          <circle cx="15" cy="9" r="1.5" class="port-pins" fill="currentColor"></circle>
+          <circle cx="12" cy="13" r="2" class="port-pins" fill="currentColor"></circle>
+          <!-- Flap Covers -->
+          <line x1="12" y1="2" x2="12" y2="22" class="port-cover-closed" stroke="currentColor" stroke-width="3"></line>
+          <line x1="12" y1="2" x2="21" y2="8" class="port-cover-open" stroke="currentColor" stroke-width="3" style="display: none;"></line>
+        </svg>
+        
+        <!-- Profile Button -->
+        <div class="topbar-profile-circle" id="topbar-profile-btn" onclick="toggleProfileModal()" style="cursor: pointer;" title="Driver Profile">
+          <svg id="topbar-profile-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+          </svg>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Notification Panel Dropdown -->
+    <div class="notification-panel" id="notification-panel">
+      <div class="notification-panel-header">
+        <h3>Notifications</h3>
+        <button class="clear-all-btn" onclick="clearAllNotifications(event)">Clear All</button>
+      </div>
+      <div class="notification-panel-body" id="notification-panel-body">
+        <!-- Notification list items will be injected here -->
+      </div>
+    </div>
+    
+    <!-- MAIN SCREEN AREA -->
+    <main class="main-content">
+      
+      <!-- Left Card: Car Status -->
+      <section class="car-status-card">
+        <div class="battery-top-indicator" style="background-color: transparent;"></div>
+        
+        <div class="car-image-container">
+          <img src="./Car Image Frame.png" alt="Tesla Top View" class="car-image" id="car-image">
+          
+          <!-- Tire Pressure Displays -->
+          <div class="tire-pressure tp-fl" id="tp-fl" onclick="adjustTirePressure('fl')">25 psi</div>
+          <div class="tire-pressure tp-fr" id="tp-fr" onclick="adjustTirePressure('fr')">25 psi</div>
+          <div class="tire-pressure tp-rl" id="tp-rl" onclick="adjustTirePressure('rl')">25 psi</div>
+          <div class="tire-pressure tp-rr" id="tp-rr" onclick="adjustTirePressure('rr')">25 psi</div>
+        </div>
+        
+        <div style="height: 10px;"></div>
+      </section>
+      
+      <!-- Right Grid: Top and Bottom Widget Rows -->
+      <div class="right-grid">
+        
+        <!-- Top Row Widgets -->
+        <div class="top-row">
+          
+          <!-- Battery Widget (EV Enhanced) -->
+          <section class="battery-card" id="battery-card" onclick="toggleChargingState()">
+            <div class="battery-top-indicator"></div>
+            
+            <div class="battery-header-info">
+              <div class="battery-charging-specs" id="battery-charging-specs" style="display: none;">
+                <span class="charging-rate">⚡ 150 kW</span>
+                <span class="charging-time-left">22m to 80%</span>
+              </div>
+            </div>
+            
+            <div class="battery-status-wrapper">
+              <div class="battery-icon-container">
+                <!-- EV Charging Limit Target Line (Dashed 80% mark) -->
+                <div class="battery-limit-line"></div>
+                
+                <div class="battery-fill" id="battery-fill"></div>
+                <svg class="battery-lightning" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              
+              <div class="battery-percentage-group">
+                <div class="battery-percentage" id="battery-pct-text">65<span>%</span></div>
+                <div class="battery-details-sub" id="battery-details-sub">Limit: 80% • Temp: 28°C</div>
+              </div>
+            </div>
+            
+            <div class="battery-footer-info">
+              <div class="battery-remaining" id="battery-remaining-text">210 km Remaining</div>
+            </div>
+          </section>
+          
+          <!-- Map Widget -->
+          <section class="map-card" id="map-card">
+            <!-- Map Background image container (draggable & zoomable) -->
+            <div class="map-background-wrapper" id="map-bg"></div>
+            
+            <!-- Glow Pointer representing car location -->
+            <img src="./Ellipse 34.png" alt="Location Marker" class="map-car-cursor" style="display:none;">
+            <!-- Custom map pointer SVG -->
+            <svg class="map-car-cursor" viewBox="0 0 100 100" style="width: 44px; height: 44px;">
+              <defs>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              <polygon points="50,15 20,80 50,65 80,80" fill="#00e5ff" filter="url(#glow)" />
+            </svg>
+            
+            <!-- Map Overlay Controls -->
+            <div class="map-overlay">
+              <div class="map-overlay-top">
+                <button class="eco-badge" onclick="toggleEcoMode()" id="eco-badge-btn">ECO</button>
+                
+                <div class="map-top-right-controls">
+                  <div class="map-row-controls">
+                    <button class="map-btn" onclick="resetMapOrientation()" title="Compass">
+                      <img src="./COMPAS.png" alt="Compass">
+                    </button>
+                    <button class="map-btn" onclick="triggerMapSearch()" title="Search">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                  </div>
+                  
+                  <!-- Zoom Controls -->
+                  <div class="map-zoom-pill">
+                    <button class="zoom-btn" onclick="zoomMap(1)" title="Zoom In">+</button>
+                    <div class="zoom-divider"></div>
+                    <button class="zoom-btn" onclick="zoomMap(-1)" title="Zoom Out">-</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Navigation Direction Box -->
+              <div class="nav-panel" id="nav-panel" onclick="simulateNavigation()">
+                <div class="nav-direction-icon">
+                  <span id="nav-arrow-symbol">↑</span>
+                </div>
+                <div class="nav-text">
+                  <span class="nav-distance" id="nav-distance-text">4km</span>
+                  <span class="nav-street" id="nav-street-text">Jalan Kota Samarahan</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+        </div>
+        
+        <!-- Bottom Row Widgets -->
+        <div class="bottom-row">
+          
+          <!-- EV Charger Widget -->
+          <section class="ev-charger-card" onclick="routeToNearestCharger()">
+            <div class="charger-header">
+              <span class="charger-badge">EV CHARGING</span>
+              <span class="charger-status-text">Available Now</span>
+            </div>
+            
+            <div class="charger-middle">
+              <!-- Circular Progress SVG -->
+              <div class="progress-ring-container">
+                <svg class="progress-ring" width="80" height="80">
+                  <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.08)" stroke-width="5" fill="transparent" r="32" cx="40" cy="40"/>
+                  <circle class="progress-ring-bar" id="charger-progress-bar" stroke="#00e676" stroke-width="5" fill="transparent" r="32" cx="40" cy="40" stroke-dasharray="201.06" stroke-dashoffset="67.02"/>
+                </svg>
+                <div class="progress-ring-text" id="charger-slots-text">4/6</div>
+              </div>
+              
+              <div class="charger-info">
+                <div class="charger-name" id="charger-name-text">Shell Recharge</div>
+                <div class="charger-distance-wrapper">
+                  <span class="charger-distance">1.2 km</span>
+                  <span class="charger-road">Samarahan</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="charger-footer">
+              <button class="route-btn">
+                <span>Route to Station</span>
+                <span class="route-arrow">➔</span>
+              </button>
+            </div>
+          </section>
+          
+          <!-- Weather Widget -->
+          <section class="weather-card" onclick="toggleWeatherUnit()">
+            <div class="weather-glow-bg"></div>
+            <div class="weather-main">
+              <div class="weather-icon-container">
+                <div class="sun-3d"></div>
+              </div>
+              <div class="weather-temp" id="weather-temp-text">30<span class="weather-unit" id="weather-unit-text">°C</span></div>
+              <div class="weather-condition">Sunny & Clear</div>
+            </div>
+            <div class="weather-footer">
+              <div class="weather-sub-item">
+                <img src="./wind.png" alt="Wind" class="weather-sub-icon">
+                <span id="weather-wind-text">36 km / h</span>
+              </div>
+              <div class="weather-sub-item">
+                <span class="weather-sub-icon">💧</span>
+                <span>48% Humidity</span>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Music Card -->
+          <section class="music-card" id="music-card">
+            <!-- Dynamic Blurred Background -->
+            <div class="music-blur-bg" id="music-blur-bg" style="background-image: url('./Album Art.png');"></div>
+            <div class="music-card-content">
+              <div class="music-header">
+                <div class="music-album-art-wrapper">
+                  <img src="./Album Art.png" alt="Album Art" class="music-album-art" id="album-art">
+                </div>
+                <div class="music-title-artist">
+                  <div class="song-title" id="song-title">All i ask</div>
+                  <div class="song-artist" id="song-artist">Adele Album 21</div>
+                </div>
+                
+                <div class="song-playing-visualizer">
+                  <div class="vis-bar"></div>
+                  <div class="vis-bar"></div>
+                  <div class="vis-bar"></div>
+                  <div class="vis-bar"></div>
+                </div>
+              </div>
+              
+              <div class="music-progress-container">
+                <input type="range" class="music-slider" id="music-slider" min="0" max="100" value="35" oninput="seekMusic(this.value)">
+              </div>
+              
+              <div class="music-controls">
+                <button class="music-ctrl-btn" onclick="prevSong()" title="Previous">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                    <line x1="5" y1="4" x2="5" y2="20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></line>
+                  </svg>
+                </button>
+                <button class="music-ctrl-btn play-pause-btn" onclick="togglePlayPause()" id="play-pause-btn" title="Play/Pause">
+                  <!-- Default Play icon (since isPlaying starts as false) -->
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" id="play-pause-svg">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </button>
+                <button class="music-ctrl-btn" onclick="nextSong()" title="Next">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                    <line x1="19" y1="4" x2="19" y2="20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </section>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <!-- CLIMATE OVERLAY (Tesla Cabin View) -->
+    <div class="climate-overlay" id="climate-overlay">
+      <!-- ECO Toggle Badge (Top Left) -->
+      <div class="climate-overlay-top">
+        <button class="climate-eco-btn" id="climate-eco-btn" onclick="toggleClimateEco()">ECO</button>
+      </div>
+      
+      <!-- Climate Action Control Pills (Bottom Row) -->
+      <div class="climate-overlay-bottom">
+        
+        <!-- Pill 1: Rapid Climate Modes -->
+        <div class="climate-pill">
+          <button class="climate-pill-btn" id="btn-rapid-cooling" onclick="triggerRapidCooling()">Rapid Cooling</button>
+          <div class="climate-divider"></div>
+          <button class="climate-pill-btn" id="btn-rapid-warming" onclick="triggerRapidWarming()">Rapid Warming</button>
+        </div>
+        
+        <!-- Pill 2: Window Defrosters -->
+        <div class="climate-pill icon-only">
+          <button class="climate-pill-btn" id="btn-rear-defrost" onclick="toggleClimateIconBtn(this)" title="Rear Defrost">
+            <img src="./rear.png" alt="Rear Defrost">
+          </button>
+          <div class="climate-divider"></div>
+          <button class="climate-pill-btn" id="btn-front-defrost" onclick="toggleClimateIconBtn(this)" title="Front Defrost">
+            <img src="./windshied.png" alt="Front Defrost">
+          </button>
+        </div>
+        
+        <!-- Pill 3: HVAC Power & Auto/AC -->
+        <div class="climate-pill">
+          <button class="climate-pill-btn active" id="btn-climate-auto" onclick="toggleClimateAuto(this)">Auto</button>
+          <div class="climate-divider"></div>
+          <button class="climate-pill-btn icon-btn-center active" id="btn-climate-power" onclick="toggleClimatePower()" title="Toggle Climate Power">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"></path>
+            </svg>
+          </button>
+          <div class="climate-divider"></div>
+          <button class="climate-pill-btn active" id="btn-climate-ac" onclick="toggleClimateAC(this)">A/C</button>
+        </div>
+        
+        <!-- Pill 4: Airflow Directions -->
+        <div class="climate-pill icon-only">
+          <button class="climate-pill-btn" id="btn-flow-windshield" onclick="selectAirflow('windshield', this)" title="Airflow to Windshield">
+            <img src="./defrost.png" alt="Defrost">
+          </button>
+          <div class="climate-divider"></div>
+          <button class="climate-pill-btn active" id="btn-flow-face" onclick="selectAirflow('face', this)" title="Airflow to Face">
+            <img src="./face.png" alt="Face">
+          </button>
+          <div class="climate-divider"></div>
+          <button class="climate-pill-btn" id="btn-flow-feet" onclick="selectAirflow('feet', this)" title="Airflow to Feet">
+            <img src="./footwell.png" alt="Footwell">
+          </button>
+        </div>
+        
+        <!-- Pill 5: Air Recirculation -->
+        <div class="climate-pill icon-only single-btn">
+          <button class="climate-pill-btn active" id="btn-climate-recirc" onclick="toggleClimateRecirc(this)" title="Recirculation">
+            <img src="./inside circulation.png" alt="Recirculation">
+          </button>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- RIGHT SIDEBAR CONTROLS -->
+    <aside class="sidebar">
+      <button class="sidebar-btn" id="power-btn" onclick="toggleScreenSleep()" title="Screen Sleep">
+        <img src="./power button.png" alt="Power">
+      </button>
+      <button class="sidebar-btn" onclick="adjustVolume(-5)" title="Volume Down">
+        <img src="./Volume Down.png" alt="Volume Down">
+      </button>
+      <button class="sidebar-btn" onclick="returnToHome()" title="Home">
+        <img src="./home.png" alt="Home">
+      </button>
+      <button class="sidebar-btn" onclick="adjustVolume(5)" title="Volume Up">
+        <img src="./Volume Up.png" alt="Volume Up">
+      </button>
+      <!-- Back Arrow button -->
+      <button class="sidebar-btn back-btn" onclick="triggerBackButton()" title="Back">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      </button>
+    </aside>
+    
+    <!-- BOTTOM STATUS BAR -->
+    <footer class="bottom-bar">
+      <div class="bottom-left">
+        <button class="back-home-btn" onclick="returnToHome()">
+          <img src="./Home Icon.png" alt="Home Icon">
+          <span>Back To Home</span>
+        </button>
+      </div>
+      
+      <div class="bottom-center">
+        <!-- App Grid Launcher Button -->
+        <button class="icon-btn" id="app-launcher-btn" onclick="toggleAppLauncherPage()" title="App Launcher">
+          <img src="./Grid button.png" alt="App Launcher">
+        </button>
+        <!-- Vehicle Settings Button -->
+        <button class="icon-btn" onclick="toggleSettingsModal()" title="Vehicle Settings">
+          <img src="./vehicle setting.png" alt="Vehicle Settings">
+        </button>
+        
+        <!-- Climate Control Panel -->
+        <div class="climate-control">
+          <!-- Driver Temp Adjuster -->
+          <div class="temp-adjuster">
+            <button class="temp-btn" onclick="adjustTemp('driver', -1)">-</button>
+            <span class="temp-val" id="temp-driver">19 °c</span>
+            <button class="temp-btn" onclick="adjustTemp('driver', 1)">+</button>
+          </div>
+          
+          <!-- Fan Control (Toggles Climate Overlay) -->
+          <button class="fan-icon-btn" onclick="toggleClimateOverlay()" title="Climate Cabin Controls">
+            <img src="./fanblades.png" alt="Fan Blades" id="fan-blades-img">
+          </button>
+          
+          <!-- Passenger Temp Adjuster -->
+          <div class="temp-adjuster">
+            <button class="temp-btn" onclick="adjustTemp('passenger', -1)">-</button>
+            <span class="temp-val" id="temp-passenger">19 °c</span>
+            <button class="temp-btn" onclick="adjustTemp('passenger', 1)">+</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bottom-right">
+        <!-- Quick Theme Toggle Button -->
+        <button class="icon-btn theme-toggle-btn" id="theme-toggle-btn" onclick="toggleGlobalTheme()" title="Toggle Theme Mode">
+          <!-- Sun Icon (visible in light mode) -->
+          <svg class="theme-sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" fill="#f5c71a" stroke="#f5c71a"></circle>
+            <line x1="12" y1="1" x2="12" y2="3" stroke="#f5c71a"></line>
+            <line x1="12" y1="21" x2="12" y2="23" stroke="#f5c71a"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f5c71a"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f5c71a"></line>
+            <line x1="1" y1="12" x2="3" y2="12" stroke="#f5c71a"></line>
+            <line x1="21" y1="12" x2="23" y2="12" stroke="#f5c71a"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f5c71a"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f5c71a"></line>
+          </svg>
+          <!-- Moon Icon (visible in dark mode) -->
+          <svg class="theme-moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#f1c40f" stroke="#f1c40f"></path>
+          </svg>
+        </button>
+        <!-- Autopilot Toggle Button -->
+        <button class="autopilot-btn" id="autopilot-btn" onclick="toggleAutopilot()" title="Autopilot System">
+          <img src="./Component 2.png" alt="Autopilot">
+        </button>
+      </div>
+    </footer>
+    
+    <!-- INTERACTIVE OVERLAYS & MODALS -->
+    
+    <div class="screen-sleep-overlay" id="sleep-overlay" onclick="toggleScreenSleep()">
+      <div class="sleep-clock" id="sleep-clock">20:10</div>
+      <div class="sleep-date" id="sleep-date">Tuesday, May 26</div>
+      
+      <!-- Battery Status Indicator during Sleep Mode -->
+      <div class="sleep-battery" id="sleep-battery">
+        <div class="sleep-battery-icon-container">
+          <div class="sleep-battery-fill" id="sleep-battery-fill"></div>
+          <svg class="sleep-battery-lightning" id="sleep-battery-lightning" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="sleep-battery-info">
+          <div class="sleep-battery-pct-group">
+            <span class="sleep-battery-pct" id="sleep-battery-pct">65%</span>
+            <span class="sleep-battery-status" id="sleep-battery-status-text">210 km Remaining</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sleep-hint">Tap anywhere to wake screen</div>
+    </div>
+    
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop" id="modal-backdrop" onclick="closeAllModals()"></div>
+    
+    <!-- APP LAUNCHER FULLPAGE MENU -->
+    <div class="app-launcher-page" id="app-launcher-page">
+      <div class="app-launcher-header">
+        <h2>Infotainment Menu</h2>
+        <span class="app-launcher-subtitle">Select an application below</span>
+      </div>
+      
+      <div class="app-launcher-grid">
+        <!-- App 1: Navigation -->
+        <div class="app-card-item navigation" onclick="openLauncherApp('Navigation')">
+          <div class="app-card-icon">🧭</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Navigation</span>
+            <span class="app-card-desc">Maps & Navigation Directions</span>
+          </div>
+        </div>
+        
+        <!-- App 2: Media -->
+        <div class="app-card-item media" onclick="openLauncherApp('Media')">
+          <div class="app-card-icon">🎵</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Media</span>
+            <span class="app-card-desc">Music, Radio & Podcasts</span>
+          </div>
+        </div>
+        
+        <!-- App 3: Phone -->
+        <div class="app-card-item phone" onclick="openLauncherApp('Phone')">
+          <div class="app-card-icon">📞</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Phone</span>
+            <span class="app-card-desc">Contacts & Hands-free Calling</span>
+          </div>
+        </div>
+        
+        <!-- App 4: Camera -->
+        <div class="app-card-item camera" onclick="openLauncherApp('Camera')">
+          <div class="app-card-icon">📷</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Camera</span>
+            <span class="app-card-desc">360° Surrounding Surround-Vision</span>
+          </div>
+        </div>
+        
+        <!-- App 5: Arcade -->
+        <div class="app-card-item arcade" onclick="openLauncherApp('Arcade')">
+          <div class="app-card-icon">🎮</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Arcade</span>
+            <span class="app-card-desc">In-car Gaming & Arcade Games</span>
+          </div>
+        </div>
+        
+        <!-- App 6: Browser -->
+        <div class="app-card-item browser" onclick="openLauncherApp('Web Browser')">
+          <div class="app-card-icon">🌐</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Browser</span>
+            <span class="app-card-desc">Browse the Internet & Web Apps</span>
+          </div>
+        </div>
+        
+        <!-- App 7: Calendar -->
+        <div class="app-card-item calendar" onclick="openLauncherApp('Calendar')">
+          <div class="app-card-icon">📅</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Calendar</span>
+            <span class="app-card-desc">Schedule, Appointments & Alarms</span>
+          </div>
+        </div>
+        
+        <!-- App 8: Settings -->
+        <div class="app-card-item settings" onclick="openLauncherApp('Settings')">
+          <div class="app-card-icon">⚙️</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Settings</span>
+            <span class="app-card-desc">Vehicle Systems & Mode Tuning</span>
+          </div>
+        </div>
+        
+        <!-- App 9: Energy -->
+        <div class="app-card-item energy" onclick="openLauncherApp('Energy')">
+          <div class="app-card-icon">⚡</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Energy</span>
+            <span class="app-card-desc">Consumption Statistics & History</span>
+          </div>
+        </div>
+
+        <!-- App 10: Charging -->
+        <div class="app-card-item charging-app" onclick="openLauncherApp('Charging')">
+          <div class="app-card-icon">🔌</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Charging</span>
+            <span class="app-card-desc">Battery Charging Port & Limit Settings</span>
+          </div>
+        </div>
+
+        <!-- App 11: Climate -->
+        <div class="app-card-item climate-app" onclick="openLauncherApp('Climate')">
+          <div class="app-card-icon">❄️</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Climate</span>
+            <span class="app-card-desc">Cabin Temperatures & Fans</span>
+          </div>
+        </div>
+
+        <!-- App 12: Toybox -->
+        <div class="app-card-item toybox" onclick="openLauncherApp('Toybox')">
+          <div class="app-card-icon">🎁</div>
+          <div class="app-card-info">
+            <span class="app-card-name">Toybox</span>
+            <span class="app-card-desc">Easter Eggs, Sketchpad & SFX</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Map Navigation Fullscreen Modal -->
+    <div class="modal-window navigation-modal" id="navigation-modal">
+      <!-- Fullscreen Map background (draggable & zoomable) -->
+      <div class="nav-map-wrapper" id="nav-map-bg">
+        <!-- SVG container to draw route path lines -->
+        <svg class="nav-route-svg" id="nav-route-svg" viewBox="0 0 1000 600" preserveAspectRatio="none">
+          <path id="nav-route-path" d="" fill="none" stroke="#00b0ff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        
+        <!-- Glowing Pointer representing vehicle current position -->
+        <svg class="nav-vehicle-pointer" id="nav-vehicle-pointer" viewBox="0 0 100 100">
+          <defs>
+            <filter id="glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+          <polygon points="50,15 20,80 50,65 80,80" fill="#00e5ff" filter="url(#glow-nav)" />
+        </svg>
+      </div>
+
+      <!-- Left Sidebar: Search & Route Details -->
+      <div class="nav-search-sidebar" id="nav-search-sidebar">
+        <div class="nav-search-header">
+          <button class="nav-back-btn" onclick="handleNavBackClick()" title="Back">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <div class="nav-search-box-wrapper">
+            <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Where to?" oninput="filterNavSuggestions(this.value)">
+            <button class="nav-search-clear-btn" id="nav-search-clear-btn" onclick="clearNavSearch()" style="display: none;">&times;</button>
+          </div>
+          <div class="nav-battery-status" id="nav-battery-status" title="Battery State of Charge">
+            <span class="nav-battery-icon">⚡</span>
+            <span class="nav-battery-val" id="nav-bat-val">65%</span>
+          </div>
+        </div>
+
+        <!-- Offline Navigation Status Banner -->
+        <div class="nav-offline-banner" id="nav-offline-banner" style="display: none;">
+          <span class="offline-banner-icon">📡</span>
+          <span class="offline-banner-text">Offline Navigation Active • Pre-downloaded map cached</span>
+        </div>
+        
+        <!-- Suggestion list container -->
+        <div class="nav-suggestions-list" id="nav-suggestions-list">
+          <!-- Suggestion items will be dynamically injected here -->
+        </div>
+      </div>
+
+      <!-- Turn-by-Turn Instructions Container (visible during active navigation) -->
+      <div class="nav-instructions-container" id="nav-instructions-container" style="display: none;">
+        <!-- Current Turn Instruction Card -->
+        <div class="nav-instruction-card" id="nav-instruction-card">
+          <div class="nav-instr-icon">
+            <span id="nav-instr-arrow">↑</span>
+          </div>
+          <div class="nav-instr-details">
+            <span class="nav-instr-dist" id="nav-instr-dist">500m</span>
+            <span class="nav-instr-road" id="nav-instr-road">UNIMAS Expressway</span>
+          </div>
+        </div>
+
+        <!-- Next Turn Instruction Card -->
+        <div class="nav-next-turn-card" id="nav-next-turn-card">
+          <div class="nav-next-icon">
+            <span id="nav-next-arrow">↖</span>
+          </div>
+          <div class="nav-next-details">
+            <span class="nav-next-label">THEN</span>
+            <span class="nav-next-road" id="nav-next-road">Jalan Uni Entrance Rd</span>
+          </div>
+        </div>
+
+        <!-- Active Navigation Bottom Trip Bar -->
+        <div class="nav-trip-bar" id="nav-trip-bar" style="display: none;">
+          <div class="nav-offline-badge" id="nav-trip-offline-badge" style="display: none;">Offline Map</div>
+          <div class="nav-trip-info">
+            <div class="nav-trip-item">
+              <span class="trip-val-large" id="nav-trip-eta">17:05</span>
+              <span class="trip-label">ETA</span>
+            </div>
+            <div class="nav-trip-divider"></div>
+            <div class="nav-trip-item">
+              <span class="trip-val-large" id="nav-trip-time">12</span>
+              <span class="trip-label">min</span>
+            </div>
+            <div class="nav-trip-divider"></div>
+            <div class="nav-trip-item">
+              <span class="trip-val-large" id="nav-trip-distance">4.2</span>
+              <span class="trip-label">km</span>
+            </div>
+          </div>
+          <button class="nav-cancel-btn" onclick="cancelNavSimulation()">Cancel Route</button>
+        </div>
+
+        <!-- Road Conditions & Traffic Alerts Card -->
+        <div class="nav-alerts-card" id="nav-alerts-card" style="display: none;">
+          <div class="alerts-card-header">
+            <span class="alerts-title-icon">⚠️</span>
+            <span class="alerts-title">ROUTE CONDITIONS</span>
+          </div>
+          <div class="alerts-card-body">
+            <!-- Alert Item 1: Weather Warning (Heavy Rain) -->
+            <div class="alert-item weather-alert" id="alert-weather" style="display: none;">
+              <span class="alert-icon">🌧️</span>
+              <div class="alert-details">
+                <span class="alert-text-main">Heavy Rain Warning</span>
+                <span class="alert-text-sub">Slippery road conditions. Reduce speed.</span>
+              </div>
+            </div>
+
+            <!-- Alert Item 2: Traffic Alert -->
+            <div class="alert-item traffic-alert" id="alert-traffic" style="display: none;">
+              <span class="alert-icon">🚗</span>
+              <div class="alert-details">
+                <span class="alert-text-main">Heavy Congestion Ahead</span>
+                <span class="alert-text-sub">Accident reported on Expressway.</span>
+              </div>
+            </div>
+
+            <!-- Alert Item 3: Alternative Route Suggestion -->
+            <div class="alert-item detour-alert" id="alert-detour" style="display: none;">
+              <span class="alert-icon">🛣️</span>
+              <div class="alert-details">
+                <span class="alert-text-main">Alternative Route Available</span>
+                <span class="alert-text-sub">Via Jalan Stutong Bypass Link (Save 4 mins)</span>
+              </div>
+              <button class="detour-accept-btn" onclick="acceptDetourRoute()">Use Route</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speed HUD (Speedometer & Speed Limit Sign) -->
+      <div class="nav-speed-hud" id="nav-speed-hud" style="display: none;">
+        <div class="nav-speed-val-group">
+          <span class="nav-speed-val" id="nav-speed-val">0</span>
+          <span class="nav-speed-unit">km/h</span>
+        </div>
+        <div class="nav-speed-limit-sign">
+          <span class="limit-val" id="nav-speed-limit-val">60</span>
+        </div>
+      </div>
+
+      <!-- Zoom Controls for fullscreen map -->
+      <div class="nav-map-controls">
+        <button class="map-btn" onclick="resetNavMapOrientation()" title="Compass">
+          <img src="./COMPAS.png" alt="Compass">
+        </button>
+        <div class="nav-zoom-pill">
+          <button class="zoom-btn" onclick="zoomNavMap(1)" title="Zoom In">+</button>
+          <div class="zoom-divider"></div>
+          <button class="zoom-btn" onclick="zoomNavMap(-1)" title="Zoom Out">-</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Settings Modal -->
+    <div class="modal-window settings-modal" id="settings-modal">
+      
+      
+
+      <!-- LEFT AREA: Car Graphic & Options Controls -->
+      <div class="settings-main-area">
+        
+        <!-- Tab 1: Shortcut -->
+        <div class="settings-panel active" id="settings-tab-shortcut">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car_top_corner_view_transparent.png" alt="Vehicle Top Corner View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column scrollable-settings-panel">
+            <h3 class="panel-title">Quick Shortcuts</h3>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Driver Profile Picture</span>
+                <span class="setting-desc">Customize your dashboard profile avatar</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12.5px;">
+                <div class="topbar-profile-circle" id="settings-profile-preview" onclick="toggleProfileModal()" style="width: 36px; height: 36px; cursor: pointer; border: 2.5px solid var(--accent-blue); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;">
+                  <svg id="settings-profile-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+                  </svg>
+                </div>
+                <button class="control-action-btn" onclick="toggleProfileModal()">Change</button>
+              </div>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Mirrors Fold</span>
+                <span class="setting-desc">Auto-fold mirrors when locking car</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="shortcut-mirrors-fold">
+                <span class="slider-round"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Child Safety Lock</span>
+                <span class="setting-desc">Disable rear interior door handles</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="shortcut-child-lock">
+                <span class="slider-round"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Steering Mode</span>
+                <span class="setting-desc">Adjust steering feedback and resistance</span>
+              </div>
+              <div class="control-selector">
+                <button class="selector-option" onclick="selectSteering('Comfort', this)">Comfort</button>
+                <button class="selector-option active" onclick="selectSteering('Standard', this)">Standard</button>
+                <button class="selector-option" onclick="selectSteering('Sport', this)">Sport</button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Glovebox</span>
+                <span class="setting-desc">Open passenger glovebox compartment</span>
+              </div>
+              <button class="control-action-btn" onclick="alert('Glovebox opened')">Open</button>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Sentry Mode</span>
+                <span class="setting-desc">Monitor vehicle surroundings when parked</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="shortcut-sentry-mode">
+                <span class="slider-round"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Car Wash Mode</span>
+                <span class="setting-desc">Lock charge port, disable wipers, close windows</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="shortcut-carwash-mode">
+                <span class="slider-round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 2: Vehicle Shortcut (renamed from Control to match screenshot 1) -->
+        <div class="settings-panel" id="settings-tab-control">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car bird view.png" alt="Vehicle Top View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column scrollable-settings-panel">
+            <h3 class="panel-title">Vehicle search Mode</h3>
+            
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectSearchMode('Honk and Blink', this)">Honk and Blink</button>
+              <button class="pill-option" onclick="selectSearchMode('Honk', this)">Honk</button>
+              <button class="pill-option" onclick="selectSearchMode('Blinking Light', this)">Blinking Light</button>
+            </div>
+            
+            <h3 class="panel-title" style="margin-top: 20px;">Doors and Windows</h3>
+            
+            <!-- Toggles on left, info on right -->
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="proximity-unlock-chk" onchange="toggleProximityUnlock(this.checked)">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Proximity Sensor - Unlock</span>
+                <span class="setting-desc">Doors Automatically Unlock When the key Nearby</span>
+              </div>
+            </div>
+            
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" id="proximity-lock-chk" onchange="toggleProximityLock(this.checked)">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Proximity Sensor - lock</span>
+                <span class="setting-desc">Doors Automatically Lock When the key not nearby</span>
+              </div>
+            </div>
+            
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="auto-close-windows-chk">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Automatically Close Window When Locking</span>
+              </div>
+            </div>
+            
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="auto-unlock-park-chk">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Automatic Door Unlocking When Parking</span>
+              </div>
+            </div>
+            
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" id="driver-door-only-chk">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Only Unlock Driver Door</span>
+                <span class="setting-desc">Pressing the unlock button once unlocks the driver door only; another press unlocks all doors</span>
+              </div>
+            </div>
+            
+            <!-- Power Off Button at the bottom -->
+            <button class="power-off-card-btn" id="shortcut-power-off-btn" onclick="triggerPowerOff()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
+              </svg>
+              <span>Power Off</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Tab 3: Driving -->
+        <div class="settings-panel" id="settings-tab-driving">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car corner back view.png" alt="Vehicle Rear Corner View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column">
+            <h3 class="panel-title">Driving Mode</h3>
+            
+            <!-- Mode selector cards -->
+            <div class="mode-cards-row">
+              <div class="mode-card active" onclick="selectDrivingMode('Pure', this)">Pure</div>
+              <div class="mode-card" onclick="selectDrivingMode('Hybrid', this)">Hybrid</div>
+              <div class="mode-card" onclick="selectDrivingMode('Power', this)">Power</div>
+            </div>
+            
+            <h3 class="panel-title" style="margin-top: 20px;">Energy Regeneration</h3>
+            
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectEnergyRegen('Auto', this)">Auto</button>
+              <button class="pill-option" onclick="selectEnergyRegen('Low', this)">Low</button>
+              <button class="pill-option" onclick="selectEnergyRegen('Medium', this)">Medium</button>
+              <button class="pill-option" onclick="selectEnergyRegen('High', this)">High</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 4: Light -->
+        <div class="settings-panel" id="settings-tab-light">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./settings-car_transparent.png" alt="Vehicle Lights View" class="settings-car-image" id="settings-car-image-light">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column scrollable-settings-panel">
+            <h3 class="panel-title">Exterior Light</h3>
+            
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectHeadlights('Off', this)">Off</button>
+              <button class="pill-option" onclick="selectHeadlights('Parking', this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </button>
+              <button class="pill-option" onclick="selectHeadlights('Headlights', this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 12h6M15 8h6M15 16h6M3 12a9 9 0 0 0 9 9V3a9 9 0 0 0-9 9z"></path></svg>
+              </button>
+              <button class="pill-option" onclick="selectHeadlights('Auto', this)">Auto</button>
+            </div>
+            
+            <button class="action-card-btn" style="justify-content: flex-start; gap: 10px;" id="fog-light-btn" onclick="toggleFogLight()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 5px;">
+                <path d="M4 12h10M4 8h10M4 16h10M17 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+              </svg>
+              <span>Rear Fog Light</span>
+            </button>
+            
+            <h3 class="panel-title" style="margin-top: 25px;">Headlight Head Adjustment</h3>
+            <div class="slider-container">
+              <input type="range" class="music-slider" min="0" max="3" value="0" id="headlight-adjustment-slider" oninput="updateSliderLabel('headlight-level-label', this.value, ['Level 1', 'Level 2', 'Level 3', '0'])">
+              <div class="slider-label-row">
+                <span>Level 1</span>
+                <span>Level 2</span>
+                <span>Level 3</span>
+                <span>0</span>
+              </div>
+            </div>
+            
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="interior-opening-chk">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Interior Illumination on Door Opening</span>
+              </div>
+            </div>
+            
+            <div class="toggle-row-left">
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="exterior-approach-chk">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Exterior Illumination on Approach</span>
+                <span class="setting-desc">The Exterior will light up when system detect the key nearby the vehicle</span>
+              </div>
+            </div>
+            
+            <h3 class="panel-title" style="margin-top: 25px;">Follow Me Home Light</h3>
+            <div class="slider-container">
+              <input type="range" class="music-slider" min="0" max="6" value="0" id="follow-me-home-slider" oninput="updateSliderLabel('follow-me-home-label', this.value, ['Off', '10s', '20s', '30s', '40s', '50s', '60s'])">
+              <div class="slider-label-row">
+                <span>Off</span>
+                <span>10s</span>
+                <span>20s</span>
+                <span>30s</span>
+                <span>40s</span>
+                <span>50s</span>
+                <span>60s</span>
+              </div>
+            </div>
+            
+            <h3 class="panel-title" style="margin-top: 25px;">Reading Lights</h3>
+            <div class="mode-cards-row">
+              <button class="mode-card" style="display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="triggerReadingLights(true)">
+                <span class="reading-light-icon">💡</span>
+                <span>all on</span>
+              </button>
+              <button class="mode-card" style="display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="triggerReadingLights(false)">
+                <span class="reading-light-icon" style="opacity: 0.5;">💡</span>
+                <span>all off</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 5: Driver Assist -->
+        <div class="settings-panel" id="settings-tab-assist">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./settings-car_transparent.png" alt="Vehicle Assist View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column">
+            <h3 class="panel-title">Driver Assistance</h3>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Autosteer (Beta)</span>
+                <span class="setting-desc">Enable lane centering assistance</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="settings-autosteer-checkbox" onchange="toggleAutosteerSettings(this.checked)">
+                <span class="slider-round"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Speed Limit Warning</span>
+                <span class="setting-desc">Notify when exceeding speed threshold</span>
+              </div>
+              <div class="control-selector">
+                <button class="selector-option" onclick="selectSpeedLimit('Off', this)">Off</button>
+                <button class="selector-option active" onclick="selectSpeedLimit('Visual', this)">Visual</button>
+                <button class="selector-option" onclick="selectSpeedLimit('Chime', this)">Chime</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 6: Voice Assistant -->
+        <div class="settings-panel" id="settings-tab-voice">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./settings-car_transparent.png" alt="Vehicle Voice View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column">
+            <h3 class="panel-title">Voice Assistant</h3>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Voice Control Language</span>
+                <span class="setting-desc">Language of voice commander</span>
+              </div>
+              <div class="control-selector">
+                <button class="selector-option active" onclick="deactivateSiblings(this); this.classList.add('active')">English</button>
+                <button class="selector-option" onclick="deactivateSiblings(this); this.classList.add('active')">Malay</button>
+              </div>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Wake-Word Command</span>
+                <span class="setting-desc">Enable hands-free wake word "Hey Tesla"</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider-round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 7: Display -->
+        <div class="settings-panel" id="settings-tab-display">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car central panel.png" alt="Vehicle Central Panel View" class="settings-car-image blend-image-edges">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column scrollable-settings-panel">
+            <div class="selector-pill">
+              <button class="pill-option active" id="display-theme-auto" onclick="selectThemePill('auto', this)">Auto</button>
+              <button class="pill-option" id="display-theme-light" onclick="selectThemePill('light', this)">light Mode</button>
+              <button class="pill-option" id="display-theme-dark" onclick="selectThemePill('dark', this)">Dark Mode</button>
+            </div>
+            
+            <button class="action-card-btn" onclick="setDashboardTheme('light')">
+              <span>Switch to Light Mode</span>
+              <span class="chevron-right">➔</span>
+            </button>
+            
+            <button class="action-card-btn" onclick="setDashboardTheme('dark')">
+              <span>Switch to Dark Mode</span>
+              <span class="chevron-right">➔</span>
+            </button>
+            
+            <h3 class="panel-title" style="margin-top: 25px;">Brightness Adjustment</h3>
+            
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Center Display Brightness</h4>
+            <div class="slider-container">
+              <input type="range" class="music-slider" min="10" max="100" value="80" id="center-brightness-slider" oninput="console.log('Center Brightness:', this.value)">
+            </div>
+            
+            <div class="toggle-row-left" style="margin-top: -10px; margin-bottom: 20px;">
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="auto-brightness-chk">
+                <span class="slider-round"></span>
+              </label>
+              <div class="toggle-info-right">
+                <span class="setting-title">Center Display Automatic Brightness</span>
+              </div>
+            </div>
+            
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Instrument Cluster Brightness</h4>
+            <div class="slider-container">
+              <input type="range" class="music-slider" min="10" max="100" value="70" id="instrument-brightness-slider" oninput="console.log('Instrument Brightness:', this.value)">
+            </div>
+            
+            <h3 class="panel-title" style="margin-top: 25px;">Unit Setting</h3>
+            
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Language Settings</h4>
+            <button class="action-card-btn" onclick="alert('Language selection menu...')">
+              <span>English (US)</span>
+              <span class="chevron-right">➔</span>
+            </button>
+            
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Temperature Unit</h4>
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectTempUnit('C', this)">C</button>
+              <button class="pill-option" onclick="selectTempUnit('K', this)">K</button>
+            </div>
+            
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Distance & Speed Units</h4>
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectDistanceUnit('km', this)">Km, Km/h</button>
+              <button class="pill-option" onclick="selectDistanceUnit('miles', this)">Miles, mph</button>
+            </div>
+            
+            <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Times</h4>
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectTimeUnit('24h', this)">24 H</button>
+              <button class="pill-option" onclick="selectTimeUnit('12h', this)">12 H</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 8 (New): Sound -->
+        <div class="settings-panel" id="settings-tab-sound">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car central panel.png" alt="Vehicle Central Panel View" class="settings-car-image blend-image-edges">
+            </div>
+          </div>
+          <!-- Column 2: Sound Settings -->
+          <div class="settings-options-column">
+            <h3 class="panel-title">Audio & EV Sound</h3>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Master Media Volume</span>
+                <span class="setting-desc">Adjust cabin speakers volume level</span>
+              </div>
+              <div class="slider-container" style="display: flex; align-items: center; gap: 10px; width: 140px;">
+                <input type="range" id="settings-sound-volume" min="0" max="100" value="50" oninput="adjustVolumeFromSettings(this.value)" style="width: 100%; accent-color: var(--accent-blue);">
+                <span id="settings-volume-val" style="font-size: 13px; font-weight: 600; min-width: 24px; text-align: right;">50</span>
+              </div>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Pedestrian Warning (AVAS)</span>
+                <span class="setting-desc">Acoustic Vehicle Alerting System for pedestrian safety</span>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" id="settings-avas-toggle" checked onchange="toggleAVAS(this.checked)">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <h4 style="font-size: 13px; font-weight: 600; margin-top: 15px; margin-bottom: 8px; color: var(--text-dark);">AVAS Sound Profile</h4>
+            <div class="selector-pill" style="margin-bottom: 15px;">
+              <button class="pill-option active" onclick="selectAVASProfile('Standard', this)">Standard</button>
+              <button class="pill-option" onclick="selectAVASProfile('Futuristic', this)">Futuristic</button>
+              <button class="pill-option" onclick="selectAVASProfile('Sporty', this)">Sporty</button>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Active Sound Design (ASD)</span>
+                <span class="setting-desc">Simulated propulsion motor noise inside the cabin</span>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" id="settings-asd-toggle" checked onchange="toggleASD(this.checked)">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <h4 style="font-size: 13px; font-weight: 600; margin-top: 15px; margin-bottom: 8px; color: var(--text-dark);">ASD Propulsion Sound</h4>
+            <div class="selector-pill">
+              <button class="pill-option active" onclick="selectASDSound('Cyber-Electric', this)">Cyber-Electric</button>
+              <button class="pill-option" onclick="selectASDSound('Hyper-Drive', this)">Hyper-Drive</button>
+              <button class="pill-option" onclick="selectASDSound('Quiet', this)">Quiet</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 9: Connect -->
+        <div class="settings-panel" id="settings-tab-connect">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car corner front view.png" alt="Vehicle Front Corner View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column">
+            <h3 class="panel-title">Connectivity</h3>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Wi-Fi Connection</span>
+                <span class="setting-desc">Configure dashboard Wi-Fi network</span>
+              </div>
+              <button class="control-action-btn" onclick="toggleWifiModal()">Wi-Fi Settings</button>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Bluetooth Settings</span>
+                <span class="setting-desc">Pair mobile phones for media/calls</span>
+              </div>
+              <button class="control-action-btn" onclick="toggleBluetoothModal()">Pair Device</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tab 9: My Vehicle -->
+        <div class="settings-panel" id="settings-tab-myvehicle">
+          <!-- Column 1: Car Display -->
+          <div class="settings-car-column">
+            <div class="settings-car-container">
+              <img src="./car bird view.png" alt="Vehicle Top View" class="settings-car-image">
+            </div>
+          </div>
+          <!-- Column 2: Controls -->
+          <div class="settings-options-column scrollable-settings-panel">
+            <div class="brand-version-container">
+              <div class="brand-signature">Juice</div>
+              <div class="brand-version-line">Current version : Juice Auto t 1.2.3</div>
+              <div class="brand-version-line">Isa Map Version : N.J6A9887002</div>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Odometer</span>
+                <span class="setting-desc">Total vehicle mileage</span>
+              </div>
+              <strong style="color: var(--text-dark); font-size: 14px;">12,450 km</strong>
+            </div>
+            
+            <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+              <div class="setting-info" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span class="setting-title">Battery Charge Limit</span>
+                  <span class="setting-desc">Set the maximum state of charge for daily use</span>
+                </div>
+                <strong style="font-size: 20px; font-weight: 700;" id="settings-charge-limit-value">80%</strong>
+              </div>
+              <div class="slider-container" style="width: 100%; margin-top: 10px;">
+                <input type="range" class="music-slider" min="50" max="100" value="80" id="charge-limit-slider" oninput="adjustChargeLimit(this.value)">
+                <div class="slider-label-row">
+                  <span>50%</span>
+                  <span>60%</span>
+                  <span>70%</span>
+                  <span>80% (Daily)</span>
+                  <span>90%</span>
+                  <span>100% (Trip)</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+              <div class="setting-info">
+                <span class="setting-title">Tire Pressure Calibration</span>
+                <span class="setting-desc">Adjust warnings and display tire values (psi)</span>
+              </div>
+              <div class="tire-adjuster-grid" style="width: 100%; margin-top: 5px;">
+                <!-- Front Left -->
+                <div class="tire-control-card">
+                  <div class="tire-control-info">
+                    <span class="tire-label">Front Left</span>
+                    <span class="tire-val-display" id="tire-val-fl-settings">25</span>
+                  </div>
+                  <div class="tire-adjust-btns">
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('fl', -1)">-</button>
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('fl', 1)">+</button>
+                  </div>
+                </div>
+                <!-- Front Right -->
+                <div class="tire-control-card">
+                  <div class="tire-control-info">
+                    <span class="tire-label">Front Right</span>
+                    <span class="tire-val-display" id="tire-val-fr-settings">25</span>
+                  </div>
+                  <div class="tire-adjust-btns">
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('fr', -1)">-</button>
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('fr', 1)">+</button>
+                  </div>
+                </div>
+                <!-- Rear Left -->
+                <div class="tire-control-card">
+                  <div class="tire-control-info">
+                    <span class="tire-label">Rear Left</span>
+                    <span class="tire-val-display" id="tire-val-rl-settings">25</span>
+                  </div>
+                  <div class="tire-adjust-btns">
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('rl', -1)">-</button>
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('rl', 1)">+</button>
+                  </div>
+                </div>
+                <!-- Rear Right -->
+                <div class="tire-control-card">
+                  <div class="tire-control-info">
+                    <span class="tire-label">Rear Right</span>
+                    <span class="tire-val-display" id="tire-val-rr-settings">25</span>
+                  </div>
+                  <div class="tire-adjust-btns">
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('rr', -1)">-</button>
+                    <button class="tire-adjust-btn" onclick="modifyTireVal('rr', 1)">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      
+      
+    
+      <!-- RIGHT SIDEBAR NAVIGATION: Scrollable Tab List -->
+      <nav class="settings-sidebar scrollable-tabs" id="settings-sidebar">
+        <!-- Shortcuts -->
+        <button class="settings-tab active" onclick="switchSettingsTabNew(event, 'shortcut')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><circle cx="8" cy="9" r="2" fill="currentColor"></circle><circle cx="16" cy="15" r="2" fill="currentColor"></circle></svg>
+          <span>Shortcuts</span>
+        </button>
+        <!-- Vehicle Controls -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'control')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"></rect><circle cx="7" cy="19" r="2"></circle><circle cx="17" cy="19" r="2"></circle><path d="M5 11V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4"></path></svg>
+          <span>Vehicle Controls</span>
+        </button>
+        <!-- Driving -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'driving')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <circle cx="12" cy="12" r="2.5"></circle>
+            <line x1="12" y1="14.5" x2="12" y2="21"></line>
+            <line x1="9.5" y1="12" x2="3" y2="12"></line>
+            <line x1="14.5" y1="12" x2="21" y2="12"></line>
+          </svg>
+          <span>Driving</span>
+        </button>
+        <!-- Lights -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'light')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="21" x2="14" y2="21"></line></svg>
+          <span>Lights</span>
+        </button>
+        <!-- Driver Assist -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'assist')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="2" x2="4" y2="22"></line>
+            <line x1="20" y1="2" x2="20" y2="22"></line>
+            <rect x="8" y="9" width="8" height="7" rx="1"></rect>
+            <rect x="7" y="10" width="1" height="4" rx="0.5"></rect>
+            <rect x="16" y="10" width="1" height="4" rx="0.5"></rect>
+            <path d="M9 11h6v-1a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1z"></path>
+          </svg>
+          <span>Driver Assist</span>
+        </button>
+        <!-- Voice Assistant -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'voice')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="10" cy="10" r="7"></circle>
+            <circle cx="16" cy="16" r="4.5"></circle>
+          </svg>
+          <span>Voice Assistant</span>
+        </button>
+        <!-- Display -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'display')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <span>Display</span>
+        </button>
+        <!-- Sound -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'sound')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span>Sound</span>
+        </button>
+        <!-- Connect -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'connect')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          <span>Connect</span>
+        </button>
+        <!-- My Vehicle -->
+        <button class="settings-tab" onclick="switchSettingsTabNew(event, 'myvehicle')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>My Vehicle</span>
+        </button>
+      </nav>
+    </div>
+    
+    <!-- Volume HUD popup (appears when adjusting volume) -->
+    <div class="volume-hud-container" id="volume-hud">
+      <span class="volume-hud-icon">🔊</span>
+      <div class="volume-hud-bar-wrapper">
+        <div class="volume-hud-bar" id="volume-hud-bar"></div>
+      </div>
+      <div class="volume-hud-value" id="volume-hud-val">50</div>
+    </div>
+    
+    <!-- Wi-Fi Settings Modal (750 width, 544 height, white, border-radius 10) -->
+    <div class="modal-window wifi-modal" id="wifi-modal">
+      <div class="wifi-modal-header">
+        <div class="wifi-modal-title-group">
+          <h3>Wi-Fi Settings</h3>
+          <span class="wifi-modal-subtitle" id="wifi-connected-status">Connected to Samarahan_Highspeed_5G</span>
+        </div>
+        
+        <!-- Wi-Fi Power Toggle -->
+        <div class="wifi-toggle-container">
+          <span class="wifi-toggle-label">Wi-Fi</span>
+          <label class="toggle-switch">
+            <input type="checkbox" checked id="wifi-toggle-checkbox" onchange="toggleWifiState(this.checked)">
+            <span class="slider-round"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="wifi-modal-body">
+        <!-- Wi-Fi Active Networks List -->
+        <div class="wifi-networks-list" id="wifi-networks-list">
+          
+          <!-- Connected Network Item -->
+          <div class="wifi-network-item connected-net" id="wifi-net-connected">
+            <div class="wifi-net-info">
+              <span class="wifi-net-icon-glyph">📶</span>
+              <div class="wifi-net-name-group">
+                <span class="wifi-net-name">Samarahan_Highspeed_5G</span>
+                <span class="wifi-net-status">Connected</span>
+              </div>
+            </div>
+            <button class="wifi-connect-btn disconnect" onclick="disconnectWifi()">Disconnect</button>
+          </div>
+          
+          <div class="wifi-section-title">AVAILABLE NETWORKS</div>
+          
+          <!-- Available Network List -->
+          <div class="wifi-available-list" id="wifi-available-list">
+            <!-- Shell Recharge Wifi -->
+            <div class="wifi-network-item" onclick="connectWifiNetwork('Shell_Recharge_WiFi', true)">
+              <div class="wifi-net-info">
+                <span class="wifi-net-icon-glyph">📶</span>
+                <span class="wifi-net-name">Shell_Recharge_WiFi</span>
+              </div>
+              <div class="wifi-net-actions">
+                <span class="wifi-lock-glyph">🔒</span>
+                <button class="wifi-connect-btn">Connect</button>
+              </div>
+            </div>
+            <!-- UNIMAS Campus Net -->
+            <div class="wifi-network-item" onclick="connectWifiNetwork('UNIMAS_Campus_Net', true)">
+              <div class="wifi-net-info">
+                <span class="wifi-net-icon-glyph">📶</span>
+                <span class="wifi-net-name">UNIMAS_Campus_Net</span>
+              </div>
+              <div class="wifi-net-actions">
+                <span class="wifi-lock-glyph">🔒</span>
+                <button class="wifi-connect-btn">Connect</button>
+              </div>
+            </div>
+            <!-- Tesla Supercharger Free -->
+            <div class="wifi-network-item" onclick="connectWifiNetwork('Tesla_Supercharger_Free', false)">
+              <div class="wifi-net-info">
+                <span class="wifi-net-icon-glyph" style="color: #29b6f6;">📶</span>
+                <span class="wifi-net-name">Tesla_Supercharger_Free</span>
+              </div>
+              <div class="wifi-net-actions">
+                <span class="wifi-badge-open">OPEN</span>
+                <button class="wifi-connect-btn">Connect</button>
+              </div>
+            </div>
+            <!-- Guest Network -->
+            <div class="wifi-network-item" onclick="connectWifiNetwork('Guest_Network', false)">
+              <div class="wifi-net-info">
+                <span class="wifi-net-icon-glyph" style="opacity: 0.6;">📶</span>
+                <span class="wifi-net-name">Guest_Network</span>
+              </div>
+              <div class="wifi-net-actions">
+                <span class="wifi-badge-open">OPEN</span>
+                <button class="wifi-connect-btn">Connect</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <!-- Wi-Fi Off Screen Overlay -->
+        <div class="wifi-disabled-screen" id="wifi-disabled-screen" style="display: none;">
+          <div class="wifi-disabled-icon">📶</div>
+          <h4>Wi-Fi is Turned Off</h4>
+          <p>Enable the Wi-Fi switch above to discover nearby networks.</p>
+        </div>
+        
+        <!-- Wi-Fi Password Input overlay (Interactive) -->
+        <div class="wifi-password-overlay" id="wifi-password-overlay" style="display: none;">
+          <div class="wifi-password-box">
+            <h4>Enter Wi-Fi Password</h4>
+            <p id="password-prompt-ssid">Network: Shell_Recharge_WiFi</p>
+            <input type="password" class="wifi-pw-input" id="wifi-pw-input" placeholder="Password">
+            <div class="wifi-pw-actions">
+              <button class="wifi-pw-btn cancel" onclick="cancelWifiPassword()">Cancel</button>
+              <button class="wifi-pw-btn connect" onclick="submitWifiPassword()">Join</button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      <div class="wifi-modal-footer">
+        <button class="wifi-footer-done" onclick="toggleWifiModal()">Done</button>
+      </div>
+    </div>
+
+    <!-- Bluetooth Settings Modal (Reusing wifi-modal classes for clean styling matching user specifications) -->
+    <div class="modal-window wifi-modal bluetooth-modal" id="bluetooth-modal">
+      <div class="wifi-modal-header">
+        <div class="wifi-modal-title-group">
+          <h3>Bluetooth Settings</h3>
+          <span class="wifi-modal-subtitle" id="bluetooth-connected-status">Bluetooth Enabled</span>
+        </div>
+        
+        <!-- Bluetooth Power Toggle -->
+        <div class="wifi-toggle-container">
+          <span class="wifi-toggle-label">Bluetooth</span>
+          <label class="toggle-switch">
+            <input type="checkbox" checked id="bluetooth-toggle-checkbox" onchange="toggleBluetoothPowerState(this.checked)">
+            <span class="slider-round"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="wifi-modal-body">
+        <!-- Bluetooth Active Devices List -->
+        <div class="wifi-networks-list" id="bluetooth-devices-list">
+          <!-- Rendered dynamically in JS -->
+        </div>
+        
+        <!-- Bluetooth Off Screen Overlay -->
+        <div class="wifi-disabled-screen" id="bluetooth-disabled-screen" style="display: none;">
+          <div class="wifi-disabled-icon">📶</div>
+          <h4>Bluetooth is Turned Off</h4>
+          <p>Enable the Bluetooth switch above to discover and pair nearby devices.</p>
+        </div>
+      </div>
+      
+      <div class="wifi-modal-footer">
+        <button class="wifi-footer-done" onclick="toggleBluetoothModal()">Done</button>
+      </div>
+    </div>
+    
+    <!-- Profile Selection Modal -->
+    <div class="modal-window profile-modal" id="profile-modal" style="width: 440px; height: 350px; z-index: 60;">
+      <div class="wifi-modal-header" style="padding: 15px 20px;">
+        <div class="wifi-modal-title-group">
+          <h3 style="font-size: 16px; margin: 0; color: var(--text-dark);">Select Driver Avatar</h3>
+          <span class="wifi-modal-subtitle">Choose from three car renders</span>
+        </div>
+        <button class="notification-close-btn" onclick="toggleProfileModal()" style="font-size: 20px; background: none; border: none; color: var(--text-dark); cursor: pointer;">&times;</button>
+      </div>
+      <div class="wifi-modal-body" style="padding: 15px; display: flex; justify-content: space-around; align-items: center; gap: 15px; flex-direction: row; height: calc(100% - 110px); box-sizing: border-box;">
+        
+        <div class="profile-option-card" onclick="selectProfilePicture('car corner back view.png')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div class="profile-thumbnail-wrapper" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(0,0,0,0.15); transition: border-color 0.2s;">
+            <img src="./car corner back view.png" alt="Rear Corner View" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <span style="font-size: 12px; font-weight: 600; color: var(--text-dark);">Rear View</span>
+        </div>
+
+        <div class="profile-option-card" onclick="selectProfilePicture('car corner front view.png')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div class="profile-thumbnail-wrapper" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(0,0,0,0.15); transition: border-color 0.2s;">
+            <img src="./car corner front view.png" alt="Front Corner View" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <span style="font-size: 12px; font-weight: 600; color: var(--text-dark);">Front View</span>
+        </div>
+
+        <div class="profile-option-card" onclick="selectProfilePicture('car top corner view.png')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <div class="profile-thumbnail-wrapper" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(0,0,0,0.15); transition: border-color 0.2s;">
+            <img src="./car top corner view.png" alt="Top Corner View" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <span style="font-size: 12px; font-weight: 600; color: var(--text-dark);">Top View</span>
+        </div>
+
+      </div>
+      <div class="wifi-modal-footer" style="padding: 10px 20px; display: flex; justify-content: flex-end;">
+        <button class="wifi-footer-done" onclick="toggleProfileModal()" style="padding: 8px 16px; font-size: 13px;">Cancel</button>
+      </div>
+    </div>
+    
+    <!-- Dynamic slide down notification container -->
+    <div class="slide-notification" id="slide-notification">
+      <div class="notification-content">
+        <span class="notification-icon" id="notification-icon">🔔</span>
+        <span id="notification-text">Welcome to the EV Dashboard</span>
+      </div>
+      <button class="notification-close-btn" onclick="hideNotification()">&times;</button>
+    </div>
+    
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
